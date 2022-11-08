@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  nimbus:
+  janus-gateway:
     image: janus-dependencies:latest
     volumes:
       - ./config/:/opt/janus/etc/janus/
@@ -11,7 +11,7 @@ services:
       - 8088:8088
       - 8188:8188
       - 10000-10030:10000-10030/udp
-  web_server:
+  web-server:
     image: httpd:alpine
     restart: always
     ports:
