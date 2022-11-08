@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  nimbus:
+    image: janus-dependencies:latest
+    volumes:
+      - ./config/:/opt/janus/etc/janus/
+      - ./log/:/var/log/
+    restart: always
+    ports:
+      - 7088:7088
+      - 8088:8088
+      - 8188:8188
+      - 10000-10030:10000-10030/udp
+  web_server:
+    image: httpd:alpine
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./html:/usr/local/apache2/htdocs
