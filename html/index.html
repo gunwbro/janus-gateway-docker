@@ -67,19 +67,19 @@
         면접자 입장
       </button>
     </nav>
-
     <div class="container">
+      <div class="cblank"></div>
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
-            <h1>Plugin Demo: Video Room</h1>
+            <h1>비대면 면접 시스템</h1>
           </div>
           <div class="container" id="details">
             <div class="row">
               <div class="col-md-12">
-                <p>
-                  Press the <code>Start</code> button above to launch the demo.
-                </p>
+                <h4>
+                  면접관은 최대 5명 입장가능. 면접은 순서대로 1명씩 진행 됨
+                </h4>
               </div>
             </div>
           </div>
@@ -88,12 +88,11 @@
               <span class="label label-info" id="you"></span>
               <div class="col-md-12" id="controls">
                 <div class="input-group margin-bottom-md hide" id="registernow">
-                  <span class="input-group-addon">@</span>
                   <input
                     autocomplete="off"
                     class="form-control"
                     type="text"
-                    placeholder="Choose a display name"
+                    placeholder="이름을 입력하세요"
                     id="username"
                     onkeypress="return checkEnter(this, event);"
                   />
@@ -103,7 +102,7 @@
                       autocomplete="off"
                       id="register"
                     >
-                      Join the room
+                      입장
                     </button>
                   </span>
                 </div>
@@ -116,32 +115,11 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      Local Video
+                      본인
                       <span
                         class="label label-primary hide"
                         id="publisher"
                       ></span>
-                      <div class="btn-group btn-group-xs pull-right hide">
-                        <div class="btn-group btn-group-xs">
-                          <button
-                            id="bitrateset"
-                            autocomplete="off"
-                            class="btn btn-primary dropdown-toggle"
-                            data-toggle="dropdown"
-                          >
-                            Bandwidth<span class="caret"></span>
-                          </button>
-                          <ul id="bitrate" class="dropdown-menu" role="menu">
-                            <li><a href="#" id="0">No limit</a></li>
-                            <li><a href="#" id="128">Cap to 128kbit</a></li>
-                            <li><a href="#" id="256">Cap to 256kbit</a></li>
-                            <li><a href="#" id="512">Cap to 512kbit</a></li>
-                            <li><a href="#" id="1024">Cap to 1mbit</a></li>
-                            <li><a href="#" id="1500">Cap to 1.5mbit</a></li>
-                            <li><a href="#" id="2000">Cap to 2mbit</a></li>
-                          </ul>
-                        </div>
-                      </div>
                     </h3>
                   </div>
                   <div class="panel-body" id="videolocal"></div>
@@ -151,7 +129,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      Remote Video #1
+                      면접관
                       <span class="label label-info hide" id="remote1"></span>
                     </h3>
                   </div>
@@ -162,7 +140,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      Remote Video #2
+                      면접관
                       <span class="label label-info hide" id="remote2"></span>
                     </h3>
                   </div>
@@ -175,7 +153,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      Remote Video #3
+                      면접관
                       <span class="label label-info hide" id="remote3"></span>
                     </h3>
                   </div>
@@ -186,31 +164,22 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      Remote Video #4
+                      면접관
                       <span class="label label-info hide" id="remote4"></span>
                     </h3>
                   </div>
                   <div class="panel-body relative" id="videoremote4"></div>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h3 class="panel-title">
-                      Remote Video #5
-                      <span class="label label-info hide" id="remote5"></span>
-                    </h3>
-                  </div>
-                  <div class="panel-body relative" id="videoremote5"></div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <hr />
-      <div class="footer"></div>
+      <div class="userList">
+        <div class="interviewee-num">면접자 수:</div>
+        <hr />
+        <div class="interviewee-list"></div>
+      </div>
     </div>
   </body>
 </html>
