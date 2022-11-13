@@ -5,7 +5,7 @@
 
 var janus = null;
 var sfutest = null;
-var opaqueId = "videoroomtest-" + Janus.randomString(12);
+var opaqueId = "videoroom-" + Janus.randomString(12);
 
 var myroom = 1234; // Demo room
 if (getQueryStringValue("room") !== "")
@@ -545,15 +545,16 @@ function registerUsername() {
       $("#register").removeAttr("disabled").click(registerUsername);
       return;
     }
-    if (/[^a-zA-Z0-9]/.test(username)) {
-      $("#you")
-        .removeClass()
-        .addClass("label label-warning")
-        .html("Input is not alphanumeric");
-      $("#username").removeAttr("disabled").val("");
-      $("#register").removeAttr("disabled").click(registerUsername);
-      return;
-    }
+    // TO-DO: 이름을 영문, 숫자만 코드인데 제거시 Janus 와 연동되어 문제가 생길지 확인 필요
+    // if (/[^a-zA-Z0-9]/.test(username)) {
+    //   $("#you")
+    //     .removeClass()
+    //     .addClass("label label-warning")
+    //     .html("Input is not alphanumeric");
+    //   $("#username").removeAttr("disabled").val("");
+    //   $("#register").removeAttr("disabled").click(registerUsername);
+    //   return;
+    // }
     var register = {
       request: "join",
       room: myroom,
