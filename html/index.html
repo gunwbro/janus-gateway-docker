@@ -35,7 +35,7 @@
     ></script>
     <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="janus.js"></script>
-    <script type="text/javascript" src="videoroom.js"></script>
+    <script type="text/javascript" src="video.js"></script>
     <script
       src="https://kit.fontawesome.com/fa2bfa8352.js"
       crossorigin="anonymous"
@@ -45,7 +45,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css"
       type="text/css"
     />
-    <link rel="stylesheet" href="css/demo.css" type="text/css" />
+    <link rel="stylesheet" href="css/index.css" type="text/css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -63,7 +63,7 @@
       <button class="participateBtn yer" autocomplete="off" id="start">
         면접관 입장
       </button>
-      <button class="participateBtn yee" autocomplete="off" id="start">
+      <button class="participateBtn yee" autocomplete="off" id="start-ee">
         면접자 입장
       </button>
     </nav>
@@ -71,7 +71,7 @@
       <div class="cblank"></div>
       <div class="row">
         <div class="col-md-12">
-          <div class="page-header">
+          <div class="page-header" id="header">
             <h1>비대면 면접 시스템</h1>
           </div>
           <div class="container" id="details">
@@ -83,8 +83,9 @@
               </div>
             </div>
           </div>
-          <div class="container hide" id="videojoin">
-            <div class="row">
+
+          <div class="container name-register hide" id="videojoin">
+            <div class="row" style="float: right; width: 400px">
               <span class="label label-info" id="you"></span>
               <div class="col-md-12" id="controls">
                 <div class="input-group margin-bottom-md hide" id="registernow">
@@ -94,13 +95,17 @@
                     type="text"
                     placeholder="이름을 입력하세요"
                     id="username"
-                    onkeypress="return checkEnter(this, event);"
                   />
                   <span class="input-group-btn">
                     <button
                       class="btn btn-success"
                       autocomplete="off"
                       id="register"
+                      style="
+                        background-color: #1976d2;
+                        background-image: none !important;
+                        border: 1px solid #1976d2;
+                      "
                     >
                       입장
                     </button>
@@ -110,17 +115,24 @@
             </div>
           </div>
           <div class="container hide" id="videos">
-            <div class="row">
+            <div class="row" style="display: flex; justify-content: center">
               <div class="col-md-4">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">
-                      본인
-                      <span
-                        class="label label-primary hide"
-                        id="publisher"
-                      ></span>
-                    </h3>
+                    <span class="participant-name hide" id="remote-ee"></span>
+
+                    <h3 class="panel-title">(면접자)</h3>
+                  </div>
+                  <div class="panel-body relative" id="video-ee"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="display: flex; justify-content: center">
+              <div class="col-md-4" id="localcol">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <span class="participant-name hide" id="publisher"></span>
+                    <h3 class="panel-title">(면접관)</h3>
                   </div>
                   <div class="panel-body" id="videolocal"></div>
                 </div>
@@ -128,10 +140,9 @@
               <div class="col-md-4">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">
-                      면접관
-                      <span class="label label-info hide" id="remote1"></span>
-                    </h3>
+                    <span class="participant-name hide" id="remote1"></span>
+
+                    <h3 class="panel-title">(면접관)</h3>
                   </div>
                   <div class="panel-body relative" id="videoremote1"></div>
                 </div>
@@ -139,23 +150,25 @@
               <div class="col-md-4">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">
-                      면접관
-                      <span class="label label-info hide" id="remote2"></span>
-                    </h3>
+                    <span class="participant-name hide" id="remote2"></span>
+
+                    <h3 class="panel-title">(면접관)</h3>
                   </div>
                   <div class="panel-body relative" id="videoremote2"></div>
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div
+              class="row"
+              id="lastrow"
+              style="display: flex; justify-content: center"
+            >
               <div class="col-md-4">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">
-                      면접관
-                      <span class="label label-info hide" id="remote3"></span>
-                    </h3>
+                    <span class="participant-name hide" id="remote3"></span>
+
+                    <h3 class="panel-title">(면접관)</h3>
                   </div>
                   <div class="panel-body relative" id="videoremote3"></div>
                 </div>
@@ -163,23 +176,23 @@
               <div class="col-md-4">
                 <div class="panel panel-default">
                   <div class="panel-heading">
-                    <h3 class="panel-title">
-                      면접관
-                      <span class="label label-info hide" id="remote4"></span>
-                    </h3>
+                    <span class="participant-name hide" id="remote4"></span>
+
+                    <h3 class="panel-title">(면접관)</h3>
                   </div>
                   <div class="panel-body relative" id="videoremote4"></div>
                 </div>
               </div>
+              <div class="button-set" id="buttonSet"></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="userList">
+      <!-- <div class="userList">
         <div class="interviewee-num">면접자 수:</div>
         <hr />
         <div class="interviewee-list"></div>
-      </div>
+      </div> -->
     </div>
   </body>
 </html>
