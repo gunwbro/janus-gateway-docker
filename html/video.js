@@ -663,12 +663,12 @@ function toggleMute() {
 }
 
 function toggleVideoMute() {
-  const muted = sfutest.isVideoMuted();
+  let muted = sfutest.isVideoMuted();
   Janus.log((muted ? "Unmuting" : "Muting") + " local video stream...");
   if (muted) sfutest.unmuteVideo();
   else sfutest.muteVideo();
   muted = sfutest.isVideoMuted();
-  $("#mute").html(muted ? "비디오 켜기" : "비디오 끄기");
+  $("#unpublish").html(muted ? "비디오 켜기" : "비디오 끄기");
 }
 
 function unpublishOwnFeed() {
