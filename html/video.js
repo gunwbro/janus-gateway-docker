@@ -3,7 +3,7 @@
 // used as well. Specifically, that file defines the "server" and
 // "iceServers" properties we'll pass when creating the Janus session.
 
-const MAX_INTERVIEWER = 3;
+const MAX_INTERVIEWER = 5;
 var janus = null;
 var sfutest = null;
 var opaqueId = "videoroom-" + Janus.randomString(12);
@@ -100,7 +100,11 @@ $(document).ready(function () {
                 Janus.error("  -- Error attaching plugin...", error);
                 bootbox.alert("Error attaching plugin... " + error);
               },
-              // 동의 상자
+
+              // 이 콜백은 getUserMedia가 호출되기 직전에 (파라미터=true)
+              // 그리고 완료된 후에(파라미터=false) 트리거 된다.
+              // 즉, 사용자에게 장치 액세스 동의 요청을 수락할 필요성을 알리기 위해
+              // 이에 따라 UI를 수정하는 데 사용될 수 있음.
               consentDialog: function (on) {
                 Janus.debug(
                   "Consent dialog should be " + (on ? "on" : "off") + " now"
@@ -167,7 +171,7 @@ $(document).ready(function () {
                 Janus.debug("Event: " + event);
                 if (event) {
                   if (event === "joined") {
-                    // 방 입장 이벤트 발생 시
+                    // 방 입장 (본인) 이벤트 발생 시
                     // Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
                     myid = msg["id"];
                     mypvtid = msg["private_id"];
@@ -183,7 +187,7 @@ $(document).ready(function () {
                     } else {
                       publishOwnFeed(true);
                     }
-                    // Any new feed to attach to?
+                    // Subscribe 할 Publisher 목록을 가져옴.
                     if (msg["publishers"]) {
                       var list = msg["publishers"];
                       Janus.debug(
@@ -236,6 +240,7 @@ $(document).ready(function () {
                         var id = list[f]["id"];
                         var display = list[f]["display"];
                         var streams = list[f]["streams"];
+
                         for (var i in streams) {
                           var stream = streams[i];
                           stream["id"] = id;
@@ -249,11 +254,11 @@ $(document).ready(function () {
                         newRemoteFeed(id, display, streams, isInterviewer);
                       }
                     } else if (msg["leaving"]) {
-                      // One of the publishers has gone away?
+                      // 본인(Subscriber)이 구독하고 있는 Publisher 중 한명이 나갔을 때
                       var leaving = msg["leaving"];
                       Janus.log("Publisher left: " + leaving);
                       var remoteFeed = null;
-                      for (var i = 1; i < MAX_INTERVIEWER; i++) {
+                      for (var i = 0; i < MAX_INTERVIEWER; i++) {
                         if (feeds[i] && feeds[i].rfid == leaving) {
                           remoteFeed = feeds[i];
                           break;
@@ -284,12 +289,12 @@ $(document).ready(function () {
                       }
                       delete feedStreams[leaving];
                     } else if (msg["unpublished"]) {
-                      // One of the publishers has unpublished?
+                      // 본인(Subscriber)이 구독하고 있는 Publisher 중 한명이 Publish 를 종료 했을 때
                       var unpublished = msg["unpublished"];
                       Janus.log("Publisher left: " + unpublished);
                       if (unpublished === "ok") {
-                        // That's us
-                        sfutest.hangup();
+                        // 본인이 Unpublish 한 경우
+                        sfutest.hangup(); // PeerConnection 을 끊음
                         return;
                       }
                       var remoteFeed = null;
@@ -441,7 +446,7 @@ $(document).ready(function () {
                   $("#buttonSet").append(
                     '<button class="bsbtn" id="unpublish" style=""; margin: 15px;">비디오 종료</button>'
                   );
-                  $("#unpublish").click(unpublishOwnFeed);
+                  $("#unpublish").click(toggleVideoMute);
                 }
                 if (track.kind === "audio") {
                   // We ignore local audio tracks, they'd generate echo anyway
@@ -586,6 +591,7 @@ function registerUsername(event) {
   }
 }
 
+// 본인의 Stream 을 Publish 함
 function publishOwnFeed(useAudio) {
   // Publish our stream
   $("#publish").attr("disabled", true).unbind("click");
@@ -614,7 +620,7 @@ function publishOwnFeed(useAudio) {
       }
     },
     success: function (jsep) {
-      Janus.debug("Got publisher SDP!", jsep);
+      Janus.log("Got publisher SDP!", jsep);
       var publish = { request: "configure", audio: useAudio, video: true };
       // You can force a specific codec to use when publishing by using the
       // audiocodec and videocodec properties, for instance:
@@ -649,11 +655,20 @@ function publishOwnFeed(useAudio) {
 
 function toggleMute() {
   var muted = sfutest.isAudioMuted();
-  Janus.log((muted ? "Unmuting" : "Muting") + " local stream...");
+  Janus.log((muted ? "Unmuting" : "Muting") + " local audio stream...");
   if (muted) sfutest.unmuteAudio();
   else sfutest.muteAudio();
   muted = sfutest.isAudioMuted();
   $("#mute").html(muted ? "음소거 해제" : "음소거");
+}
+
+function toggleVideoMute() {
+  const muted = sfutest.isVideoMuted();
+  Janus.log((muted ? "Unmuting" : "Muting") + " local video stream...");
+  if (muted) sfutest.unmuteVideo();
+  else sfutest.muteVideo();
+  muted = sfutest.isVideoMuted();
+  $("#mute").html(muted ? "비디오 켜기" : "비디오 끄기");
 }
 
 function unpublishOwnFeed() {
