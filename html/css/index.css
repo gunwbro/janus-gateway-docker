@@ -9,6 +9,7 @@ body {
 .centered {
   display: block;
   margin: auto;
+  height: 100%;
 }
 
 .relative {
@@ -203,7 +204,7 @@ h3 {
 .button-set {
   display: flex;
   position: fixed;
-  bottom: 100px;
+  bottom: 2vh;
   width: 100%;
   z-index: 4;
   justify-content: center;
@@ -228,4 +229,12 @@ h3 {
 
 .participant-name {
   font-size: 20px;
+}
+
+.panel-body {
+  padding-bottom: 15px !important;
+  height: 23vh !important;
+}
+.col-md-4 {
+  width: 30% !important;
 }
