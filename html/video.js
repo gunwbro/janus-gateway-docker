@@ -200,6 +200,10 @@ $(document).ready(function () {
                         var streams = list[f]["streams"];
                         var display = list[f]["display"];
 
+                        if (display.substr(0, 2) === "ee" && !isInterviewer) {
+                          alert("면접자가 이미 존재합니다.");
+                          window.location.reload();
+                        }
                         for (var i in streams) {
                           var stream = streams[i];
                           stream["id"] = id;
