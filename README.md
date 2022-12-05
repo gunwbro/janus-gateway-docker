@@ -6,12 +6,9 @@
 - 따라서 플랫폼에 의존하지 않고 편하게 설정하기 위해 Docker를 사용
 - 프론트, 미디어 서버를 모두 띄우기 위해 docker-compose 를 사용함
 
-### Installation
+### Usage
 
 1. Dockerfile을 `docker build` 명령어를 통해 이미지 생성
 2. docker-compose.yml 의 janus-gateway image 이름을 {생성한 이미지 이름}:{태그} 으로 변경
 3. `docker-compose up --build -d` 명령어를 통해 이미지를 띄움
-
-### Start
-
-프론트 페이지를 80포트로 설정 하였으므로, http://localhost/ 에 접속한다.
+4. docker-compose.yml 에서 설정한 포트번호로 http://localhost:{port}/ 에 접속한다.
