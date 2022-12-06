@@ -1,7 +1,11 @@
 version: "3.8"
 services:
   janus-gateway:
-    image: janus-dependencies:latest
+    container_name: janus-gateway
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: janus-image
     volumes:
       - ./config/:/opt/janus/etc/janus/
       - ./log/:/var/log/
@@ -12,9 +16,10 @@ services:
       - 8188:8188
       - 10000-10030:10000-10030/udp
   web-server:
+    container_name: janus-web-server
     image: httpd:alpine
     restart: always
     ports:
-      - 80:80
+      - 12345:80
     volumes:
       - ./html:/usr/local/apache2/htdocs
